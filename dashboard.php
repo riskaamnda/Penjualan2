@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['email'])) {
+    header("Location: index.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -102,8 +107,8 @@ session_start();
 
     <div class="sidebar">
         <h2>Dashboard</h2>
-        <a href="#">Home</a>
-        <a href="#">List Produk</a>
+        <a href="dashboard.php">Home</a>
+        <a href="dashboard.php?page=listproducts">List Produk</a>
         <a href="#">Customer</a>
         <a href="#">Transaksi</a>
         <a href="#">Laporan</a>
@@ -122,14 +127,16 @@ session_start();
     <div class="content">
         <?php
         $page = $_GET['page'] ?? 'home';
-        $file = "pages/$page.php";
 
-        if (file_exists($file)) {
-            include $file;
+        $allowed_pages = ['listproducts', 'profile', 'tambah', 'edit', 'hapus'];
+
+        if (in_array($page, $allowed_pages)) {
+            include __DIR__ . "/pages/$page.php";
         } else {
             echo "<h2>Welcome Dashboard</h2>";
         }
         ?>
+
     </div>
 
     <script>
